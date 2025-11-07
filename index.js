@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
@@ -8,16 +9,16 @@ const path = require("path");
 dotenv.config();
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
-// Serve images from the "images" folder
+// Serve images from /images
 app.use("/images", express.static(path.join(process.cwd(), "images")));
 
-// Create MySQL pool
+// MySQL pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "127.0.0.1",
   user: process.env.DB_USER || "root",
@@ -27,12 +28,11 @@ const pool = mysql.createPool({
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("");
+  res.send("Backend is running!");
 });
 
+// About endpoint
 const aboutFilePath = path.join(process.cwd(), "Aboutme.html");
-
-// Endpoint for About Me
 app.get("/api/about", (req, res) => {
   fs.readFile(aboutFilePath, "utf8", (err, data) => {
     if (err) {
@@ -43,7 +43,7 @@ app.get("/api/about", (req, res) => {
   });
 });
 
-// Experience files
+// Experience endpoint
 const areaFilePath = path.join(process.cwd(), "area-exp.html");
 const oldmapFilePath = path.join(process.cwd(), "oldmap-exp.html");
 const mapFilePath = path.join(process.cwd(), "map-exp.html");
@@ -64,7 +64,6 @@ app.get("/api/experience", (req, res) => {
       }
     };
 
-    // Read HTML files safely
     const IntroExp = readFileSafe(introFilePath);
     const AreaExp = readFileSafe(areaFilePath);
     const oldMapExp = readFileSafe(oldmapFilePath);
@@ -72,59 +71,62 @@ app.get("/api/experience", (req, res) => {
     const ModelExp = readFileSafe(modelFilePath);
     const MathPostdocExp = readFileSafe(mathPostdocFilePath);
 
-    // Explanations + images group with relative URLs
+    // Images with deployed backend URL
+    const BACKEND_URL = "https://my-backend-590209389403.northamerica-northeast1.run.app";
     const explanationsAndImages = [
       { id: "exp1", type: "html", content: AreaExp },
-      { id: "img1", type: "image", image: "/images/area-location.png" },
+      { id: "img1", type: "image", image: `${BACKEND_URL}/images/area-location.png` },
       { id: "exp2", type: "html", content: oldMapExp },
-      { id: "img2", type: "image", image: "/images/old-map.png" },
+      { id: "img2", type: "image", image: `${BACKEND_URL}/images/old-map.png` },
       { id: "exp3", type: "html", content: MapExp },
-      { id: "img3", type: "image", image: "/images/map.png" },
+      { id: "img3", type: "image", image: `${BACKEND_URL}/images/map.png` },
       { id: "exp4", type: "html", content: ModelExp },
-      { id: "img4", type: "image", image: "/images/model.png" }
+      { id: "img4", type: "image", image: `${BACKEND_URL}/images/model.png` }
     ];
 
     const modifiedData = [...data];
 
-    // Insert intro.html before the first item
     modifiedData.splice(0, 0, { id: "intro", type: "html", content: IntroExp });
-
-    // Insert explanationsAndImages after the first original item (now at index 1)
     modifiedData.splice(2, 0, ...explanationsAndImages);
+    modifiedData.splice(2 + explanationsAndImages.length, 0, { id: "math-postdoc", type: "html", content: MathPostdocExp });
 
-    const L = explanationsAndImages.length;
-
-    // Insert math-postdoc before original 2nd item (now at index 2 + L)
-    const mathObj = { id: "math-postdoc", type: "html", content: MathPostdocExp };
-    modifiedData.splice(2 + L, 0, mathObj);
-
-    console.log("✅ Sending modified data to frontend");
     res.json(modifiedData);
   } catch (err) {
-    console.error("🔥 Error in /api/experience:", err);
+    console.error("Error in /api/experience:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// API route to fetch all courses
+// Courses endpoint for Certifications page
 app.get("/api/courses", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM courses2");
-    res.json(rows);
+
+    // Map database fields to frontend expected format
+    const courses = rows.map(row => ({
+      id: row.id,
+      title: row.title || "",
+      platform: row.platform || "",
+      status: row.status || "",
+      certificate_date: row.certificate_date ? new Date(row.certificate_date) : null,
+      year: row.year || ""
+    }));
+
+    res.json(courses);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch courses from database" });
   }
 });
 
+// Talks endpoint
 app.get("/api/talks", (req, res) => {
-  res.json({ message: "This is data from the new backend!" });
+  res.json({ message: "This is data from the backend!" });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
-
 
 
