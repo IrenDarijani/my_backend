@@ -1,0 +1,106 @@
+{
+  "courses": [
+    {
+      "title": "Pytorch for deep learning bootcamp",
+      "platform": "Udemy",
+      "status": "Audited",
+      "year": 2025
+    },
+    {
+      "title": "Advanced Learning Algorithms",
+      "platform": "DeepLearning.AI",
+      "status": "Certificate earned",
+      "date": "2023-11"
+    },
+    {
+      "title": "Statistics for Data Science and Business Analysis",
+      "platform": "Udemy",
+      "status": "Certificate earned",
+      "date": "2023-11"
+    },
+    {
+      "title": "Supervised Machine Learning: Regression and Classification",
+      "platform": "DeepLearning.AI",
+      "status": "Certificate earned",
+      "date": "2023-10"
+    },
+    {
+      "title": "Microsoft Power BI Desktop for Business Intelligence (2023)",
+      "platform": "Udemy",
+      "status": "Certificate earned",
+      "date": "2023-07"
+    },
+    {
+      "title": "The complete SQL bootcamp",
+      "platform": "Udemy",
+      "status": "Certificate earned",
+      "date": "2023-06"
+    },
+    {
+      "title": "Machine Learning A-Z: AI, Python & R + ChatGPT Bonus 2023",
+      "platform": "Udemy",
+      "status": "Certificate earned",
+      "date": "2023-05"
+    },
+    {
+      "title": "The data science course 2023: Complete data science bootcamp",
+      "platform": "Udemy",
+      "status": "Certificate earned",
+      "date": "2023-01"
+    },
+    {
+      "title": "Data cleaning and analysis",
+      "platform": "Dataquest",
+      "status": "Certificate earned",
+      "date": "2022-09"
+    },
+    {
+      "title": "Data visualization fundamentals",
+      "platform": "Dataquest",
+      "status": "Certificate earned",
+      "date": "2022-03"
+    },
+    {
+      "title": "Pandas and Numpy fundamentals",
+      "platform": "Dataquest",
+      "status": "Certificate earned",
+      "date": "2022-02"
+    },
+    {
+      "title": "Neural Networks and Deep Learning",
+      "platform": "Coursera",
+      "status": "Audited",
+      "year": 2022
+    },
+    {
+      "title": "Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimization",
+      "platform": "Coursera",
+      "status": "Audited",
+      "year": 2022
+    },
+    {
+      "title": "Structuring Machine Learning Projects",
+      "platform": "Coursera",
+      "status": "Audited",
+      "year": 2022
+    },
+    {
+      "title": "Convolutional Neural Networks",
+      "platform": "Coursera",
+      "status": "Audited",
+      "year": 2022
+    },
+    {
+      "title": "Sequence Models",
+      "platform": "Coursera",
+      "status": "Audited",
+      "year": 2022
+    },
+    {
+      "title": "Python for data science: intermediate",
+      "platform": "Dataquest",
+      "status": "Certificate earned",
+      "date": "2020-12"
+    }
+  ]
+}
