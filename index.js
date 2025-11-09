@@ -65,7 +65,7 @@ app.get("/api/experience", (req, res) => {
     const MathPostdocExp = readFileSafe(mathPostdocFilePath);
 
     // Images with deployed backend URL
-    const BACKEND_URL = "https://my-backend-893790128563.northamerica-northeast1.run.app";
+    const BACKEND_URL = "https://my-backend-893790128563.northamerica-northeast1.run.app/";
     const explanationsAndImages = [
       { id: "exp1", type: "html", content: AreaExp },
       { id: "img1", type: "image", image: `${BACKEND_URL}/images/area-location.png` },
