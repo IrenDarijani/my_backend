@@ -1,7 +1,6 @@
 
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql2/promise");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
@@ -18,13 +17,7 @@ app.use(cors());
 // Serve images from /images
 app.use("/images", express.static(path.join(process.cwd(), "images")));
 
-// MySQL pool
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || "127.0.0.1",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "Beautiful100*",
-  database: process.env.DB_NAME || "courses_db2"
-});
+
 
 // Test route
 app.get("/", (req, res) => {
@@ -97,28 +90,33 @@ app.get("/api/experience", (req, res) => {
   }
 });
 
-// Courses endpoint for Certifications page
-app.get("/api/courses", async (req, res) => {
+app.get("/api/courses", (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM courses2");
+    const filePath = path.join(process.cwd(), "courses.json");
+    const jsonData = fs.readFileSync(filePath, "utf-8");
+    const coursesData = JSON.parse(jsonData).courses;
 
-    // Map database fields to frontend expected format
-    const courses = rows.map(row => ({
-      id: row.id,
-      title: row.title || "",
-      platform: row.platform || "",
-      status: row.status || "",
-      certificate_date: row.certificate_date ? new Date(row.certificate_date) : null,
-      year: row.year || ""
-    }));
+    // Convert YYYY-MM-DD → Month YYYY
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
 
-    res.json(courses);
+    const formattedCourses = coursesData.map(course => {
+      if (course.date) {
+        const [year, month] = course.date.split("-");
+        const monthText = monthNames[parseInt(month) - 1];
+        return { ...course, monthYear: `${monthText} ${year}` };
+      }
+      return course;
+    });
+
+    res.json(formattedCourses);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch courses from database" });
+    console.error("Error loading courses.json:", err);
+    res.status(500).json({ error: "Failed to load courses data" });
   }
 });
-
 // Talks endpoint
 app.get("/api/talks", (req, res) => {
   res.json({ message: "This is data from the backend!" });
