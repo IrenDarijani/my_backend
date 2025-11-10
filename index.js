@@ -21,7 +21,7 @@ app.use("/images", express.static(path.join(process.cwd(), "images")));
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("");
 });
 
 // About endpoint
